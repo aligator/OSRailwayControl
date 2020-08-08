@@ -18,7 +18,6 @@ export default class TrainStore {
     }
 
     add(train) {
-        // TODO: check for valid name -> only chars and numbers
         this.trains.add(train)
         this.draw()
     }

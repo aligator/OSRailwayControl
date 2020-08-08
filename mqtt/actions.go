@@ -6,7 +6,12 @@ import (
 )
 
 func (m *mqtt) onNewTrain(message Message) {
-	m.app.TrainStore.AddTrain(string(message.Payload()))
+	ok := m.app.TrainStore.AddTrain(string(message.Payload()))
+	if !ok {
+		fmt.Println("could not add train")
+		return
+	}
+
 	err := m.app.Webserver.Socket().SendAll(handler.Message{
 		Key: "addTrain", Value: string(message.Payload()),
 	})

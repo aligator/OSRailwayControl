@@ -1,25 +1,39 @@
 package store
 
-import "sync"
+import (
+	"regexp"
+	"sync"
+)
 
 type Train string
 
 type TrainStore struct {
 	activTrainsMutex sync.Mutex
 	activeTrains     map[string]Train
+
+	trainNameRegexp *regexp.Regexp
 }
 
 func NewTrainStore() TrainStore {
+	r, err := regexp.Compile("^[a-zA-Z0-9]+$")
+	if err != nil {
+		panic(err)
+	}
 	return TrainStore{
 		activTrainsMutex: sync.Mutex{},
 		activeTrains:     make(map[string]Train),
+		trainNameRegexp:  r,
 	}
 }
 
-func (t *TrainStore) AddTrain(name string) {
+func (t *TrainStore) AddTrain(name string) bool {
 	t.activTrainsMutex.Lock()
-	t.activeTrains[name] = Train(name)
+	ok := t.trainNameRegexp.MatchString(name)
+	if ok {
+		t.activeTrains[name] = Train(name)
+	}
 	t.activTrainsMutex.Unlock()
+	return ok
 }
 
 func (t *TrainStore) RemoveTrain(name string) {
