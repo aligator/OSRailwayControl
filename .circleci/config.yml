@@ -35,7 +35,7 @@ jobs:
           paths:
             - ".git"
       - run: mkdir -p /tmp/artifacts
-      - run: go get github.com/markbates/pkger
+      - run: go get github.com/markbates/pkger/cmd/pkger
       - run: go generate
       - run:
           name: Build and pack Espresso for Linux
