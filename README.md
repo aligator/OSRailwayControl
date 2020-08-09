@@ -21,9 +21,9 @@ Then the UI is available at `http://localhost:3000`.
 
 [The latest release can be found here for all popular platforms.](https://github.com/aligator/OSRailwayControl/releases)
 Just download and unpack the executable you need.
-To get all possible command line options just run:
-`./osrailway-control --help` (linux / mac)
-`osrailway-control.exe --help` (windows)
+To get all possible command line options just run:  
+`./osrailway-control --help` (linux / mac)  
+`osrailway-control.exe --help` (windows)  
 
 # Web client
 
