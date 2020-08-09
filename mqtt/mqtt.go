@@ -21,27 +21,31 @@ type Message interface {
 }
 
 type mqtt struct {
-	app      *app.App
-	port     int
-	host     string
-	user     string
-	password string
+	app         *app.App
+	port        int
+	host        string
+	user        string
+	password    string
+	topicPrefix string
 
 	client MQTT.Client
 }
 
 func NewMQTT(app *app.App) handler.MQTTHandler {
 	w := mqtt{
-		app:      app,
-		port:     app.Config.MQTT.Port,
-		host:     app.Config.MQTT.Host,
-		user:     app.Config.MQTT.User,
-		password: app.Config.MQTT.Password,
+		app:         app,
+		port:        app.Config.MQTT.Port,
+		host:        app.Config.MQTT.Host,
+		user:        app.Config.MQTT.User,
+		password:    app.Config.MQTT.Password,
+		topicPrefix: app.Config.MQTT.TopicPrefix,
 	}
 	return &w
 }
 
 func (m *mqtt) Listen() error {
+	stopSignal := make(chan bool)
+
 	opts := MQTT.NewClientOptions()
 	broker := m.host + ":" + strconv.Itoa(m.port)
 	opts.AddBroker(broker)
@@ -55,6 +59,10 @@ func (m *mqtt) Listen() error {
 
 	opts.SetCleanSession(true)
 
+	opts.OnConnectionLost = func(client MQTT.Client, err error) {
+		stopSignal <- true
+	}
+
 	client := MQTT.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		return token.Error()
@@ -67,10 +75,7 @@ func (m *mqtt) Listen() error {
 		return err
 	}
 
-	for m.client.IsConnected() {
-		// do nothing
-	}
-
+	<-stopSignal
 	return nil
 }
 

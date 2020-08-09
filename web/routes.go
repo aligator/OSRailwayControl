@@ -13,7 +13,7 @@ func (w *web) setupRoutes() {
 	w.router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		serveSpecificEmbeddedFile("/client/index.html", w, r)
 	})
-	w.router.PathPrefix("/wss").HandlerFunc(func(writer http.ResponseWriter, reader *http.Request) {
+	w.router.PathPrefix("/ws").HandlerFunc(func(writer http.ResponseWriter, reader *http.Request) {
 		w.Socket().ServeHTTP(writer, reader)
 	})
 	w.router.PathPrefix("/").HandlerFunc(serveEmbeddedFile)
