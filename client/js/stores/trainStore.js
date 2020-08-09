@@ -38,7 +38,10 @@ export default class TrainStore {
     draw() {
         // draw train list
         let listHtml = "<ul>"
-        this.trains.forEach((train) => {
+
+        Array.from(this.trains.values()).sort((a, b) => {
+            return a.name > b.name
+        }).forEach((train) => {
             listHtml += `<li><button id="btn-train-list-${train.name}">${train.name}</button></li>`
         })
         listHtml += "</ul>"
@@ -65,7 +68,7 @@ export default class TrainStore {
 <div class="slide-container">
   <label for="slider-speed">Speed (0-1023)</label>
   <input type="range" min="0" max="1023" value=${train.speed} class="slider" id="slider-speed">
-  <div>${train.speed}</div>
+  <div>${train.direction * train.speed}</div>
 </div>`
         if (!this.onSpeedChange) {
             return

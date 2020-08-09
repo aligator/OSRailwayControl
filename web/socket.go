@@ -51,7 +51,7 @@ func (s *socket) SendAll(message handler.Message) error {
 	for sessionId := range s.conn {
 		err := s.Send(sessionId, message)
 		if err != nil {
-			return err
+			fmt.Println("SendAll", sessionId, err)
 		}
 	}
 	return nil
@@ -65,6 +65,8 @@ func (s *socket) Send(sessionId uuid.UUID, message handler.Message) error {
 
 	jsonMessage, err := json.Marshal(message)
 	if err != nil {
+		// delete the conn to avoid further problems
+		delete(s.conn, sessionId)
 		return err
 	}
 
@@ -91,6 +93,7 @@ func (s *socket) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	})
 
 	s.conn[sessionId] = c
+	defer delete(s.conn, sessionId)
 
 	for {
 		select {

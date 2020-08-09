@@ -62,6 +62,8 @@ func (t *TrainStore) SetTrain(train Train) error {
 }
 
 func (t *TrainStore) GetTrain(name string) (Train, bool) {
+	t.trainsMutex.Lock()
+	defer t.trainsMutex.Unlock()
 	train, ok := t.trains[name]
 	return train, ok
 }
@@ -74,11 +76,12 @@ func (t *TrainStore) RemoveTrain(name string) {
 
 func (t *TrainStore) GetTrains() []Train {
 	t.trainsMutex.Lock()
+	defer t.trainsMutex.Unlock()
+
 	trains := make([]Train, 0)
 	for _, train := range t.trains {
 		trains = append(trains, train)
 	}
-	t.trainsMutex.Unlock()
 
 	return trains
 }

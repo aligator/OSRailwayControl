@@ -55,7 +55,7 @@ func (m *mqtt) onTrainStatus(message Message) {
 		return
 	}
 
-	if len(message.Payload()) == 0 {
+	if len(message.Payload()) == 0 || string(message.Payload()) == "" {
 		// completely remove train
 		m.app.TrainStore.RemoveTrain(trainName)
 		err := m.app.Webserver.Socket().SendAll(handler.Message{
@@ -66,6 +66,7 @@ func (m *mqtt) onTrainStatus(message Message) {
 			fmt.Println(err)
 			return
 		}
+		return
 	}
 
 	status := string(message.Payload()) == "1"
