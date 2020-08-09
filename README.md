@@ -17,6 +17,14 @@ To run it you just have to execute these commands
 - `go run . --web-port 3000 --mqtt-host 192.168.178.90 --mqtt-port 1883 --mqtt-user yourUser --mqtt-password YourPassword`
 Then the UI is available at `http://localhost:3000`. 
 
+# Binary Releases
+
+[The latest release can be found here for all popular platforms.](https://github.com/aligator/OSRailwayControl/releases)
+Just download and unpack the executable you need.
+To get all possible command line options just run:
+`./osrailway-control --help` (linux / mac)
+`osrailway-control.exe --help` (windows)
+
 # Web client
 
 The web client is currently built with plain js and html to avoid big dependencies like React or similar.
