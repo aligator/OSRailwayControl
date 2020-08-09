@@ -1,3 +1,4 @@
 .idea
 *.iml
 bindata/pkged.go
+build
