@@ -40,21 +40,21 @@ jobs:
           name: Build and pack Espresso for Linux
           command: |
             GOOS=linux GOARCH=amd64 go build -v -ldflags "-X main.version=${CIRCLE_TAG}" \
-            -o .target/osrailway-control cmd/main.go
+            -o .target/osrailway-control main.go
             cp .target/osrailway-control osrailway-control
             tar -czf /tmp/artifacts/osrailway-control-linux-amd64.tar.gz osrailway-control
       - run:
           name: Build and pack Espresso for macOS
           command: |
             GOOS=darwin GOARCH=amd64 go build -v -ldflags "-X main.version=${CIRCLE_TAG}" \
-              -o .target/osrailway-control cmd/main.go
+              -o .target/osrailway-control main.go
             cp .target/osrailway-control osrailway-control
             tar -czf /tmp/artifacts/osrailway-control-macos-amd64.tar.gz osrailway-control
       - run:
           name: Build and pack Espresso for Windows
           command: |
             GOOS=windows GOARCH=amd64 go build -v -ldflags "-X main.version=${CIRCLE_TAG}" \
-              -o .target/osrailway-control.exe cmd/main.go
+              -o .target/osrailway-control.exe main.go
             cp .target/osrailway-control.exe osrailway-control.exe
             zip /tmp/artifacts/osrailway-control-windows-amd64.zip osrailway-control.exe
       - persist_to_workspace:

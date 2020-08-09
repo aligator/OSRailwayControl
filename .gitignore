@@ -2,3 +2,4 @@
 *.iml
 bindata/pkged.go
 build
+.target
