@@ -1,0 +1,61 @@
+/**
+ * Basic css design changes to the bootstrap design
+ */
+.btn {
+    border-radius: 0;
+}
+
+header {
+    background: #80bdff;
+}
+
+#content {
+    padding: 0px 10px;
+}
+
+/**
+ * CSS needed for the side bar containing the trains.
+ */
+.sidenav {
+    height: 100%;
+    width: 160px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.sidenav button {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    display: block;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+#main {
+    margin-left: 160px; /* Same as the width of the sidenav */
+    font-size: 28px; /* Increased text to enable scrolling */
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav {
+        padding-top: 15px;
+    }
+
+    .sidenav a {
+        font-size: 18px;
+    }
+}
+
+/**
+ * Css for the train control page
+ */
+
+.btn-train-control {
+    margin: 0px 5px 0px 0px;
+}

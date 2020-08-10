@@ -2,12 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/layout.css">
+
+    <script type="module" src="js/app.js"></script>
+
     <title>OSRailway Control</title>
-    <script type="module"  src="js/app.js"></script>
 </head>
 <body>
-    <h1>OSRailway Control</h1>
+<nav role="navigation" class="sidenav">
+    <div class="text-white">
+        Trains:
+    </div>
     <div id="train-list-container"></div>
-    <div id="selected-train"></div>
+</nav>
+
+<div id="main">
+    <header>
+        <h1>OSRailway Control</h1>
+    </header>
+
+    <div id="content">
+        <div id="selected-train"></div>
+    </div>
+
+</div>
 </body>
 </html>

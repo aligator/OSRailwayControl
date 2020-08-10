@@ -37,14 +37,14 @@ export default class TrainStore {
 
     draw() {
         // draw train list
-        let listHtml = "<ul>"
+        let listHtml = ""
 
         Array.from(this.trains.values()).sort((a, b) => {
             return a.name > b.name
         }).forEach((train) => {
-            listHtml += `<li><button id="btn-train-list-${train.name}">${train.name}</button></li>`
+            listHtml += `<button type="button" class="btn btn-primary btn-train-list ${train.name === this.selected ? "active" : ""}" id="btn-train-list-${train.name}">${train.name}</button>`
         })
-        listHtml += "</ul>"
+
         document.getElementById("train-list-container").innerHTML = listHtml
 
         this.trains.forEach((train) => {
@@ -56,6 +56,8 @@ export default class TrainStore {
     }
 
     drawSelectedTrain() {
+        // redraw train list to activate the correct button
+        this.draw()
         if (!this.selected) {
             document.getElementById(`selected-train`).innerHTML = ""
             return
@@ -64,9 +66,9 @@ export default class TrainStore {
         const train = this.trains.get(this.selected)
         let html = `
 <h2>${this.selected}</h2>
-<button id="btn-backward">backward</button><button id="btn-stop">stop</button><button id="btn-forward">forward</button>
+<button type="button" class="btn btn-primary btn-train-control" id="btn-backward">backward</button><button type="button" class="btn btn-danger btn-train-control" id="btn-stop">stop</button><button type="button" class="btn btn-primary btn-train-control" id="btn-forward">forward</button>
 <div class="slide-container">
-  <label for="slider-speed">Speed (0-1023)</label>
+  <label for="slider-speed">Speed (0-1023)</label><br>
   <input type="range" min="0" max="1023" value=${train.speed} class="slider" id="slider-speed">
   <div>${train.direction * train.speed}</div>
 </div>`
