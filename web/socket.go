@@ -130,17 +130,57 @@ func (w *web) setupSocketListeners() {
 		})
 	})
 
-	w.socket.Register("setSpeed", func(sessionId uuid.UUID, value string) error {
+	w.socket.Register("patchTrain", func(sessionId uuid.UUID, value string) error {
 		var message struct {
-			Train string `json:"train"`
-			Speed int    `json:"speed"`
+			Train  string `json:"train"`
+			Values string `json:"values"`
 		}
-
 		err := json.Unmarshal([]byte(value), &message)
 		if err != nil {
 			return err
 		}
 
-		return w.app.Mqtt.Publish("/OSRailway/"+message.Train+"/drive", 0, strconv.Itoa(message.Speed))
+		// parse the actual values which are also just json
+		var trainFields struct {
+			Speed      *int  `json:"speed,omitempty"`
+			Headlights *bool `json:"headlights,omitempty"`
+			Backlights *bool `json:"backlights,omitempty"`
+		}
+
+		err = json.Unmarshal([]byte(message.Values), &trainFields)
+		if err != nil {
+			return err
+		}
+
+		// send updates for all the fields
+		if trainFields.Speed != nil {
+			err := w.app.Mqtt.Publish("/OSRailway/"+message.Train+"/drive", 0, strconv.Itoa(*trainFields.Speed))
+			if err != nil {
+				return err
+			}
+		}
+		if trainFields.Headlights != nil {
+			headlights := "0"
+			if *trainFields.Headlights {
+				headlights = "1"
+			}
+			fmt.Println("/OSRailway/" + message.Train + "/lights/head")
+			err := w.app.Mqtt.Publish("/OSRailway/"+message.Train+"/lights/head", 0, headlights)
+			if err != nil {
+				return err
+			}
+		}
+		if trainFields.Backlights != nil {
+			backlights := "0"
+			if *trainFields.Backlights {
+				backlights = "1"
+			}
+			err := w.app.Mqtt.Publish("/OSRailway/"+message.Train+"/lights/back", 0, backlights)
+			if err != nil {
+				return err
+			}
+		}
+
+		return nil
 	})
 }

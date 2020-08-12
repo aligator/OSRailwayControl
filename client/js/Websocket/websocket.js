@@ -10,7 +10,6 @@ export default class Websocket {
     isOpen = false
 
     constructor(host) {
-        console.log(host)
         this.host = host
     }
 

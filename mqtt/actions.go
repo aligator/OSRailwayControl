@@ -48,6 +48,20 @@ func (m *mqtt) extractTrainName(topic string) (string, error) {
 	return split[0], nil
 }
 
+func (m *mqtt) loadTrain(message Message) (store.Train, error) {
+	trainName, err := m.extractTrainName(message.Topic())
+	if err != nil {
+		return store.Train{}, err
+	}
+
+	train, ok := m.app.TrainStore.GetTrain(trainName)
+	if !ok {
+		fmt.Println("train not found", trainName)
+	}
+
+	return train, nil
+}
+
 func (m *mqtt) onTrainStatus(message Message) {
 	trainName, err := m.extractTrainName(message.Topic())
 	if err != nil {
@@ -91,7 +105,7 @@ func (m *mqtt) onTrainStatus(message Message) {
 }
 
 func (m *mqtt) onSpeedChange(message Message) {
-	trainName, err := m.extractTrainName(message.Topic())
+	train, err := m.loadTrain(message)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -103,17 +117,44 @@ func (m *mqtt) onSpeedChange(message Message) {
 		return
 	}
 
-	train, ok := m.app.TrainStore.GetTrain(trainName)
-	if !ok {
-		fmt.Println("train not found", trainName)
-	}
-
 	train.Speed = int(math.Round(math.Abs(float64(speed))))
 	if speed < 0 {
 		train.Direction = -1
 	} else if speed > 0 {
 		train.Direction = 1
 	} // else leave as it is
+
+	err = m.updateTrain(train)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
+func (m *mqtt) onHeadlightChange(message Message) {
+	train, err := m.loadTrain(message)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	train.Headlights = message.Payload()[0] == '1'
+
+	err = m.updateTrain(train)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
+func (m *mqtt) onBacklightChange(message Message) {
+	train, err := m.loadTrain(message)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	train.Backlights = message.Payload()[0] == '1'
 
 	err = m.updateTrain(train)
 	if err != nil {
@@ -132,6 +173,14 @@ func (m *mqtt) registerTopics() error {
 		return err
 	}
 	err = m.Register("/OSRailway/+/drive/force", 0, m.onSpeedChange)
+	if err != nil {
+		return err
+	}
+	err = m.Register("/OSRailway/+/lights/back", 0, m.onBacklightChange)
+	if err != nil {
+		return err
+	}
+	err = m.Register("/OSRailway/+/lights/head", 0, m.onHeadlightChange)
 	if err != nil {
 		return err
 	}

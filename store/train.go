@@ -7,10 +7,12 @@ import (
 )
 
 type Train struct {
-	Name      string `json:"name"`
-	Status    bool   `json:"status"`
-	Speed     int    `json:"speed"`
-	Direction int    `json:"direction"`
+	Name       string `json:"name"`
+	Status     bool   `json:"status"`
+	Speed      int    `json:"speed"`
+	Direction  int    `json:"direction"`
+	Headlights bool   `json:"headlights"`
+	Backlights bool   `json:"backlights"`
 }
 
 type TrainStore struct {

@@ -8,16 +8,15 @@ const app = {
 
 window.addEventListener("load", function(_) {
     app.websocket.init().then(() => {
-        app.trainStore = new TrainStore((train, speed) => {
+        app.trainStore = new TrainStore((trainName, trainFields) => {
             const message = {
-                train,
-                speed
+                train: trainName,
+                values: JSON.stringify(trainFields)
             }
 
             const messageJson = JSON.stringify(message)
-
-            app.websocket.send("setSpeed", messageJson)
-        })
+            app.websocket.send("patchTrain", messageJson)
+        },)
 
         app.websocket.register("getTrains", (trainsJson) => {
             const trains = JSON.parse(trainsJson)
