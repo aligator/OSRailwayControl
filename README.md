@@ -1,6 +1,6 @@
-<img width="200" alt="OSRailway Control screenshot" src="https://raw.githubusercontent.com/aligator/OsRailwayControl/master/assets/OSRailwayControl.png">
+# OSRailway Control
 
-# OSRailway Train
+<img width="400" alt="OSRailway Control screenshot" src="https://raw.githubusercontent.com/aligator/OsRailwayControl/master/assets/OSRailwayControl.png">
 
 This is a server to control [OSRailway](https://www.thingiverse.com/thing:4408535) trains using the [OSRailway Train firmware](https://github.com/aligator/OSRailwayTrain).
 It basically is a mqtt client which provides a simple web-gui (it starts a small webserver) to manage several trains. 
